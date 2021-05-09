@@ -22,7 +22,7 @@
       "browser": true,
       "node": true
    },
-   "ignorePatterns": ["node_modules"],
+   "ignorePatterns": ["node_modules", "ref", "ref2"],
    "rules": {
       "prettier/prettier": "error"
    }

@@ -2,7 +2,7 @@
 
 :root {
    ///fonts:///
-   --roboto: "Roboto", sans-serif;
+   --roboto: 'Roboto', sans-serif;
    ///colors - base:///
    --white: white;
    --background: LightCyan;
@@ -33,7 +33,7 @@ body {
    @include size($minh: -webkit-fill-available, $w: 100vw);
    @include pbm($p: 2rem);
    @include pos-relative();
-   background: linear-gradient(170deg, #0070ff 50%, #00ffe0 90%);
+   background: linear-gradient(170deg, #0070ff 50%, #409beb 90%);
    overflow-x: hidden;
    background-repeat: no-repeat;
    background-size: 100vw 100%;
