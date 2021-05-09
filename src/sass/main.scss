@@ -1,5 +1,23 @@
 ///BASE///
 @use "base/base";
 @use "base/reset";
+@use "base/animations";
+///COMPONENTS///
+@use "components/alerts";
+@use "components/spinner";
+@use "components/pipes";
+@use "components/cropper";
+@use "components/btns";
+//#COMPONENTS/FORMS#//
+@use "components/forms/form";
+@use "components/forms/form-header";
+@use "components/forms/form-body";
+@use "components/forms/form-footer";
+@use "components/forms/form-utils";
 ///LAYOUT///
 @use "layout/container";
+@use "layout/section";
+@use "layout/navbar";
+@use "layout/home";
+@use "layout/not-logged-in";
+@use "layout/not-found";

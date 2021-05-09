@@ -1,0 +1,23 @@
+@use "../abstracts" as *;
+
+.spinner-white {
+   @include size($h: 2rem, $w: 2rem);
+   @include pbm($rad: 50%, $b: 2px solid $white, $bb: 2px solid transparent);
+   animation: spin 1s linear infinite;
+}
+.spinner-blue {
+   @include size($h: 2rem, $w: 2rem);
+   @include pbm($rad: 50%, $b: 2px solid $pri-blue, $bb: 2px solid transparent);
+   animation: spin 1s linear infinite;
+}
+.spinner-green {
+   @include size($h: 2rem, $w: 2rem);
+   @include pbm($rad: 50%, $b: 2px solid $success-c, $bb: 2px solid transparent);
+   animation: spin 1s linear infinite;
+}
+
+.spinner {
+   @include pos-fixed($t: 2rem, $l: 50%);
+   transform: translateX(-50%);
+   z-index: 99999;
+}

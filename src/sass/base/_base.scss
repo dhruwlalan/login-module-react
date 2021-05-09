@@ -1,14 +1,61 @@
 @use '../abstracts' as *;
 
 :root {
-   //#fonts:#//
-   --ss: sans-serif;
+   ///fonts:///
+   --roboto: "Roboto", sans-serif;
+   ///colors - base:///
+   --white: white;
+   --background: LightCyan;
+   ///colors - blue:///
+   --pri-blue: #002fff;
+   --hov-blue: #002be9;
+   --foc-blue: rgb(0 49 255 / 25%);
+   --sec-blue: #5365b9;
+   --sec-foc-blue: rgb(83 101 185 / 25%);
+   ///colors - green:///
+   --pri-green: #00ffe0;
+   --foc-green: rgb(0 255 224 / 55%);
+   ///colors - gray:///
+   --pri-gray: #6fa2bc;
+   ///colors - alerts:///
+   --error: tomato;
+   --error-c: #721c24;
+   --error-bc: #f8d7da;
+   --success-c: #155724;
+   --success-bc: #9bf2b0;
+}
 
-   //#colors:#//
-   --white: White;
+html {
+   min-height: -webkit-fill-available;
 }
 
 body {
+   @include size($minh: -webkit-fill-available, $w: 100vw);
+   @include pbm($p: 2rem);
+   @include pos-relative();
+   background: linear-gradient(170deg, #0070ff 50%, #00ffe0 90%);
+   overflow-x: hidden;
+   background-repeat: no-repeat;
+   background-size: 100vw 100%;
    -webkit-tap-highlight-color: transparent;
    tap-highlight-color: transparent;
+
+   @media (max-width: 450px) {
+      @include pbm($p: 1rem);
+   }
+
+   &::-webkit-scrollbar {
+      width: 1.4rem;
+   }
+   &::-webkit-scrollbar-thumb {
+      background-color: lightcyan;
+      border-radius: 50px;
+      border-left: 3px solid $pri-gray;
+      border-right: 4px solid $pri-gray;
+      border-top: 3px solid $pri-gray;
+      border-bottom: 3px solid $pri-gray;
+   }
+   &::-webkit-scrollbar-track {
+      background-color: $pri-gray;
+   }
 }

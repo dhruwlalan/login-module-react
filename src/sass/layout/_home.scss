@@ -1,0 +1,98 @@
+@use "../abstracts" as *;
+
+.home {
+   &__title {
+      @include typo($c: $pri-blue, $ff: $roboto, $fs: 4rem, $fw: 400, $ta: center);
+      @include pbm($mb: 1rem);
+      @include disable-selection;
+   }
+   &__profile {
+      @include size($h: 5rem, $w: 5rem);
+      @include pbm($m: 0 auto, $mb: 1rem);
+      @include pos-relative;
+
+      &--backdrop {
+         @include size($h: -webkit-fill-available, $w: 100vw);
+         @include size($h: stretch);
+         @include pos-fixed($t: 0, $l: 0);
+      }
+
+      &--photo {
+         @include size($h: 5rem, $w: 5rem);
+         @include pbm($mr: 1rem, $rad: 50%);
+         box-shadow: 0 0 0 2px rgb(0 49 255 / 25%);
+         cursor: pointer;
+
+         &:hover {
+            box-shadow: 0 0 0 3px rgb(0 49 255 / 25%);
+         }
+      }
+
+      &--view-photo {
+         @include size($h: 5rem, $w: 5rem);
+         @include pbm($rad: 50%);
+         position: absolute;
+         z-index: 90;
+         transform: translate3d(0, 7rem, 0) scale3d(10, 10, 10);
+
+         @media (max-width: 550px) {
+            transform: translate3d(0, 7rem, 0) scale3d(8, 8, 8);
+         }
+         @media (max-width: 450px) {
+            transform: translate3d(0, 7rem, 0) scale3d(6.8, 6.8, 6.8);
+         }
+      }
+   }
+   &__details {
+      @include typo($ff: $roboto, $fs: 2rem);
+
+      &__heading {
+         @include size($h: 100%, $w: 100%);
+         @include bg($c: $pri-blue);
+         @include typo($c: $white, $fw: 500);
+         @include pbm($rad: 2rem, $pr: 1rem);
+         @include flex($jc: center, $ai: center);
+         @include disable-selection;
+      }
+      &__row {
+         @include size($h: 3.5rem, $w: 100%);
+         @include bg($c: $pri-blue);
+         @include pbm($rad: 50px);
+         @include flex($ai: center);
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+         &:not(:last-child) {
+            margin-bottom: 2rem;
+         }
+      }
+      &--key {
+         @include size($h: 100%, $w: 10rem);
+         @include typo($c: $white, $fw: 500);
+         @include pbm($rad: 2rem 0 0 2rem, $pr: 1rem);
+         @include flex($jc: flex-end, $ai: center);
+         @include disable-selection;
+
+         @media (max-width: 550px) {
+            @include typo($fs: 1.6rem, $fw: 400);
+            @include size($w: 8rem);
+         }
+         @media (max-width: 450px) {
+            @include size($w: 7rem);
+         }
+      }
+      &--value {
+         @include size($h: 100%);
+         @include bg($c: $background);
+         @include typo($c: $pri-blue, $fw: 500);
+         @include pbm($b: 1px solid $pri-blue, $rad: 2rem, $p: 0 1rem);
+         @include flex($jc: flex-start, $ai: center);
+         @include flex-item($grow: 1);
+
+         @media (max-width: 550px) {
+            @include typo($fs: 1.6rem, $fw: 400);
+         }
+         @media (max-width: 450px) {
+            overflow-x: scroll;
+         }
+      }
+   }
+}

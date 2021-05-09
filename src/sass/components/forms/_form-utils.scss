@@ -1,0 +1,23 @@
+@use "../../abstracts" as *;
+
+.eye-svg {
+   @include size($h: 2rem);
+   @include pos-absolute($t: 50%, $r: 1rem);
+   display: none;
+   transform: translateY(-50%);
+   outline: none;
+   cursor: pointer;
+}
+
+.showeyesvg {
+   display: inline-block !important;
+}
+
+.focus-input,
+.hover-input {
+   border: 1px solid $error;
+}
+.focus-label,
+.hover-label {
+   color: $error;
+}

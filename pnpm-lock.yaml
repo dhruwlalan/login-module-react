@@ -1,6 +1,8 @@
 lockfileVersion: 5.3
 
 specifiers:
+  cropperjs: ^1.5.11
+  email-validator: ^2.0.4
   eslint: ^7.25.0
   eslint-config-prettier: ^8.3.0
   eslint-plugin-prettier: ^3.4.0
@@ -12,6 +14,8 @@ specifiers:
   sass: ^1.32.12
 
 dependencies:
+  cropperjs: 1.5.11
+  email-validator: 2.0.4
   firebase: 8.4.2
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
@@ -4056,6 +4060,10 @@ packages:
       sha.js: 2.4.11
     dev: false
 
+  /cropperjs/1.5.11:
+    resolution: {integrity: sha512-SJUeBBhtNBnnn+UrLKluhFRIXLJn7XFPv8QN1j49X5t+BIMwkgvDev541f96bmu8Xe0TgCx3gON22KmY/VddaA==}
+    dev: false
+
   /cross-spawn/6.0.5:
     resolution: {integrity: sha512-eTVLrBSt7fjbDygz805pMnstIs2VTBNkRm0qxZd+M7A5XDdxVRWO5MxGBXZhjY4cqLYLdtrGqRf8mBPmzwSpWQ==}
     engines: {node: '>=4.8'}
@@ -4671,6 +4679,11 @@ packages:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
+    dev: false
+
+  /email-validator/2.0.4:
+    resolution: {integrity: sha512-gYCwo7kh5S3IDyZPLZf6hSS0MnZT8QmJFqYvbqlDZSbwdZlY6QZWxJ4i/6UhITOJ4XzyI647Bm2MXKCLqnJ4nQ==}
+    engines: {node: '>4.0'}
     dev: false
 
   /emittery/0.7.2:

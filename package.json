@@ -2,6 +2,9 @@
    "name": "login-module-react",
    "version": "0.0.1",
    "private": true,
+   "main": "index.js",
+   "author": "dhruw",
+   "license": "MIT",
    "browserslist": {
       "production": [
          ">0.2%",
@@ -19,6 +22,8 @@
       "build": "react-scripts build"
    },
    "dependencies": {
+      "cropperjs": "^1.5.11",
+      "email-validator": "^2.0.4",
       "firebase": "^8.4.2",
       "react": "^17.0.2",
       "react-dom": "^17.0.2",
