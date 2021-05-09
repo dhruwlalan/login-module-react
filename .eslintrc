@@ -1,0 +1,29 @@
+{
+   "root": true,
+   "extends": [
+      "react-app",
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended",
+      "plugin:prettier/recommended"
+   ],
+   "parserOptions": {
+      "ecmaVersion": 2021,
+      "sourceType": "module",
+      "ecmaFeatures": { "impliedStrict": true, "jsx": true }
+   },
+   "settings": {
+      "react": {
+         "version": "detect"
+      }
+   },
+   "env": {
+      "es2021": true,
+      "browser": true,
+      "node": true
+   },
+   "ignorePatterns": ["node_modules"],
+   "rules": {
+      "prettier/prettier": "error"
+   }
+}
