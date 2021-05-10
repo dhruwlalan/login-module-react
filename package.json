@@ -23,10 +23,12 @@
    },
    "dependencies": {
       "cropperjs": "^1.5.11",
+      "d3-ease": "^2.0.0",
       "email-validator": "^2.0.4",
       "firebase": "^8.4.2",
       "react": "^17.0.2",
       "react-dom": "^17.0.2",
+      "react-move": "^6.4.0",
       "react-redux": "^7.2.4",
       "react-router-dom": "^5.2.0",
       "react-scripts": "4.0.3",

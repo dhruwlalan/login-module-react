@@ -1,31 +1,38 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
-import { CSSTransition } from 'react-transition-group';
+import { Animate } from 'react-move';
+import { easeExpOut } from 'd3-ease';
 
 import BodyPortal from './BodyPortal';
 
 const AlertBox = ({ alert }) => {
-   const [open, setOpen] = useState(true);
-   console.log(open);
+   console.log(alert);
    const nodeRef = useRef(null);
 
    return (
       <BodyPortal>
-         <button onClick={() => setOpen((prev) => !prev)}>check</button>
-         <CSSTransition
+         <Animate
             nodeRef={nodeRef}
-            in={open}
-            timeout={1000}
-            classNames={{ enterActive: 'slideInDown', exitActive: 'slideOutUp' }}
+            start={() => ({
+               y: -100,
+            })}
+            update={() => ({
+               y: [alert.showAlert ? 0 : -150],
+               timing: { duration: 400, ease: easeExpOut },
+            })}
          >
-            <div
-               ref={nodeRef}
-               className={`alert alert--${alert.type}`}
-               style={{ opacity: alert.showAlert ? 1 : 1 }}
-            >
-               {alert.msg}
-            </div>
-         </CSSTransition>
+            {({ y }) => {
+               return (
+                  <div
+                     ref={nodeRef}
+                     className={`alert alert--${alert.type}`}
+                     style={{ transform: `translate3d(-50%, ${y}%, 0)` }}
+                  >
+                     {alert.msg}
+                  </div>
+               );
+            }}
+         </Animate>
       </BodyPortal>
    );
 };
