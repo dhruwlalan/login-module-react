@@ -1,5 +1,5 @@
 import React from 'react';
 
-const Edit = () => <h1>Edit</h1>;
+const Edit = () => <div>Edit</div>;
 
 export default Edit;

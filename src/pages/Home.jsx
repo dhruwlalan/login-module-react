@@ -1,5 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { selectCurrentUser } from '../redux/user/userSelector';
+import { useHistory } from 'react-router-dom';
 
-const Home = () => <h1>Home</h1>;
+import NotLoggedIn from './NotLoggedIn';
 
-export default Home;
+const Home = ({ currentUser }) => {
+   const history = useHistory();
+   return (
+      <>
+         {currentUser ? (
+            <button onClick={() => history.push('/edit')}>edit</button>
+         ) : (
+            <NotLoggedIn />
+         )}
+      </>
+   );
+};
+
+const mapStateToProps = createStructuredSelector({
+   currentUser: selectCurrentUser,
+});
+export default connect(mapStateToProps)(Home);
