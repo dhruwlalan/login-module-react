@@ -9,9 +9,9 @@ export const storeUser = (user) => ({
    payload: user,
 });
 
-export const setStatus = (status) => ({
+export const setStatus = (type, message) => ({
    type: userActionTypes.SET_STATUS,
-   payload: status,
+   payload: { type, message },
 });
 
 export const checkUserSession = () => ({

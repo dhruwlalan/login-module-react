@@ -17,6 +17,7 @@ specifiers:
   react-scripts: 4.0.3
   react-transition-group: ^4.4.1
   redux: ^4.1.0
+  redux-logger: ^3.0.6
   redux-saga: ^1.1.3
   reselect: ^4.0.0
   sass: ^1.32.12
@@ -42,6 +43,7 @@ devDependencies:
   eslint-config-prettier: 8.3.0_eslint@7.25.0
   eslint-plugin-prettier: 3.4.0_ed07edc0d33fb90bb2bebf56b9b5e0f9
   prettier: 2.2.1
+  redux-logger: 3.0.6
   sass: 1.32.12
 
 packages:
@@ -4499,6 +4501,10 @@ packages:
   /dedent/0.7.0:
     resolution: {integrity: sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=}
     dev: false
+
+  /deep-diff/0.3.8:
+    resolution: {integrity: sha1-wB3mPvsO7JeYgB1Ax+Da4ltYLIQ=}
+    dev: true
 
   /deep-equal/1.1.1:
     resolution: {integrity: sha512-yd9c5AdiqVcR+JjcwUQb9DkhJc8ngNr0MahEBGvDiJw8puWab2yZlh+nkasOnZP+EGTAP6rRp2JzJhJZzvNF8g==}
@@ -9918,6 +9924,12 @@ packages:
     dependencies:
       minimatch: 3.0.4
     dev: false
+
+  /redux-logger/3.0.6:
+    resolution: {integrity: sha1-91VZZvMJjzyIYExEnPC69XeCdL8=}
+    dependencies:
+      deep-diff: 0.3.8
+    dev: true
 
   /redux-saga/1.1.3:
     resolution: {integrity: sha512-RkSn/z0mwaSa5/xH/hQLo8gNf4tlvT18qXDNvedihLcfzh+jMchDgaariQoehCpgRltEm4zHKJyINEz6aqswTw==}

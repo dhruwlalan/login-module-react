@@ -2,21 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../redux/user/userSelector';
-import { useHistory } from 'react-router-dom';
+
+import Spinner from '../components/utils/Spinner';
 
 import NotLoggedIn from './NotLoggedIn';
+import Dashboard from './Dashboard';
 
 const Home = ({ currentUser }) => {
-   const history = useHistory();
-   return (
-      <>
-         {currentUser ? (
-            <button onClick={() => history.push('/edit')}>edit</button>
-         ) : (
-            <NotLoggedIn />
-         )}
-      </>
-   );
+   if (currentUser === 'checking') {
+      return <Spinner />;
+   } else if (currentUser) {
+      return <Dashboard />;
+   } else {
+      return <NotLoggedIn />;
+   }
 };
 
 const mapStateToProps = createStructuredSelector({

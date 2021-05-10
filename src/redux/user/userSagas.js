@@ -7,11 +7,15 @@ import { getCurrentUser } from '../../firebase/firebaseUtils';
 export function* isUserAuthenticated() {
    try {
       const user = yield getCurrentUser();
-      if (!user) yield put(storeUser('null'));
-      else yield put(storeUser(user));
-      yield put(setStatus('success'));
+      if (!user) {
+         yield put(storeUser(null));
+         yield put(setStatus('error', 'user not logged in'));
+      } else {
+         yield put(storeUser(user));
+         yield put(setStatus('success', 'user is logged in'));
+      }
    } catch (error) {
-      yield put(setStatus(error));
+      yield put(setStatus('error', error.message));
    }
 }
 export function* onCheckUserSession() {
