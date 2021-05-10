@@ -6,7 +6,6 @@ import { easeExpOut } from 'd3-ease';
 import BodyPortal from './BodyPortal';
 
 const AlertBox = ({ alert }) => {
-   console.log(alert);
    const nodeRef = useRef(null);
 
    return (
@@ -14,7 +13,7 @@ const AlertBox = ({ alert }) => {
          <Animate
             nodeRef={nodeRef}
             start={() => ({
-               y: -100,
+               y: -150,
             })}
             update={() => ({
                y: [alert.showAlert ? 0 : -150],
