@@ -4,24 +4,29 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 import { selectCurrentUser } from '../../redux/user/userSelector';
+import Spinner from '../utils/Spinner';
 
 const PrivateRoute = ({ currentUser, children, ...rest }) => {
-   console.log('private', currentUser);
    return (
       <Route
          {...rest}
-         render={({ location }) =>
-            currentUser ? (
-               children
-            ) : (
-               <Redirect
-                  to={{
-                     pathname: '/',
-                     state: { from: location },
-                  }}
-               />
-            )
-         }
+         render={({ location }) => {
+            console.log(currentUser);
+            if (currentUser === 'checking') {
+               return <Spinner />;
+            } else if (currentUser) {
+               return children;
+            } else {
+               return (
+                  <Redirect
+                     to={{
+                        pathname: '/',
+                        state: { from: location },
+                     }}
+                  />
+               );
+            }
+         }}
       />
    );
 };

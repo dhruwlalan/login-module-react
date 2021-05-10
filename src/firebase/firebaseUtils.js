@@ -13,9 +13,9 @@ const storageRef = firebase.storage().ref();
 
 export const getCurrentUser = () => {
    return new Promise((resolve, reject) => {
-      const unsubscribe = auth.onAuthStateChanged((userAuth) => {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
          unsubscribe();
-         resolve(userAuth);
+         resolve(user);
       }, reject);
    });
 };

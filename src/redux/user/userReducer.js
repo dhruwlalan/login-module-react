@@ -1,7 +1,7 @@
 import userActionTypes from './userActionTypes';
 
 const INITIAL_STATE = {
-   currentUser: null,
+   currentUser: 'checking',
    status: null,
 };
 

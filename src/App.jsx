@@ -10,8 +10,7 @@ import { checkUserSession } from './redux/user/userActions';
 
 const Home = lazy(() => import('./pages/Home'));
 const Edit = lazy(() => import('./pages/Edit'));
-const Login = lazy(() => import('./pages/Login'));
-const SignUp = lazy(() => import('./pages/SignUp'));
+const LoginSignup = lazy(() => import('./pages/LoginSignup'));
 const ForgetPassword = lazy(() => import('./pages/ForgetPassword'));
 const AccountManagement = lazy(() => import('./pages/AccountManagement'));
 const PageNotFound = lazy(() => import('./pages/PageNotFound'));
@@ -31,10 +30,10 @@ function App({ checkUserSession }) {
                   <Edit />
                </ProtectedRoute>
                <PublicRoute path="/login">
-                  <Login />
+                  <LoginSignup />
                </PublicRoute>
                <PublicRoute path="/signup">
-                  <SignUp />
+                  <LoginSignup />
                </PublicRoute>
                <PublicRoute path="/forgetPassword">
                   <ForgetPassword />
