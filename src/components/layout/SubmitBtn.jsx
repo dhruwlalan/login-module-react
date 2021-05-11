@@ -2,6 +2,7 @@ import React from 'react';
 
 const SubmitBtn = ({ path, status }) => {
    const text = path === '/login' ? 'Login' : 'Creat Account';
+   status = status ?? 'notSubmitted';
 
    let content;
    if (status === 'notSubmitted') {

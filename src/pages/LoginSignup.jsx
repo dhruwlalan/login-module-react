@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 
 import WaveSvg from '../components/layout/WaveSvg';
@@ -9,13 +9,11 @@ import FgiPass from '../components/layout/FgiPass';
 import SubmitBtn from '../components/layout/SubmitBtn';
 
 const Login = () => {
-   const location = useLocation();
-   const path = location.pathname;
+   const path = useLocation().pathname;
+   const [fullname, setFullname] = useState('');
+   const [fullnameStatus, setFullnameStatus] = useState('notEntered');
 
-   let title;
-   let forgetPassword;
-   let footer;
-
+   let title, forgetPassword, footer;
    if (path === '/login') {
       title = <h3 className="form__header--title">Login</h3>;
       forgetPassword = (
@@ -45,23 +43,27 @@ const Login = () => {
    }
 
    return (
-      <>
-         <form className="form" autoComplete="off">
-            <div className="form__header">
-               <BackLink route="/" />
-               {title}
-            </div>
-            <div className="form__body">
-               <FgiName path={path} />
-               <FgiEmail />
-               <FgiPass name="password" />
-               <SubmitBtn path={path} />
-               {forgetPassword}
-            </div>
-            {footer}
-            <WaveSvg></WaveSvg>
-         </form>
-      </>
+      <form className="form" autoComplete="off">
+         <div className="form__header">
+            <BackLink route="/" />
+            {title}
+         </div>
+         <div className="form__body">
+            <FgiName
+               path={path}
+               fullname={fullname}
+               updateFullname={setFullname}
+               fullnameStatus={fullnameStatus}
+               updateFullnameStatus={setFullnameStatus}
+            />
+            <FgiEmail />
+            <FgiPass name="password" />
+            <SubmitBtn path={path} />
+            {forgetPassword}
+         </div>
+         {footer}
+         <WaveSvg></WaveSvg>
+      </form>
    );
 };
 
