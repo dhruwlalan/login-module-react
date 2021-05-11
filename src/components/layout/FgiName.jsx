@@ -60,7 +60,6 @@ const FgiName = ({
       >
          <input
             className="form__group-input"
-            autoComplete="off"
             id="nameInput"
             type="text"
             value={fullname}

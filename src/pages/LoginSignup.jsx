@@ -12,6 +12,10 @@ const Login = () => {
    const path = useLocation().pathname;
    const [fullname, setFullname] = useState('');
    const [fullnameStatus, setFullnameStatus] = useState('notEntered');
+   const [email, setEmail] = useState('');
+   const [emailStatus, setEmailStatus] = useState('notEntered');
+   const [password, setPassword] = useState('');
+   const [passwordStatus, setPasswordStatus] = useState('notEntered');
 
    let title, forgetPassword, footer;
    if (path === '/login') {
@@ -56,8 +60,18 @@ const Login = () => {
                fullnameStatus={fullnameStatus}
                updateFullnameStatus={setFullnameStatus}
             />
-            <FgiEmail />
-            <FgiPass name="password" />
+            <FgiEmail
+               email={email}
+               updateEmail={setEmail}
+               emailStatus={emailStatus}
+               updateEmailStatus={setEmailStatus}
+            />
+            <FgiPass
+               password={password}
+               updatePassword={setPassword}
+               passwordStatus={passwordStatus}
+               updatePasswordStatus={setPasswordStatus}
+            />
             <SubmitBtn path={path} />
             {forgetPassword}
          </div>
