@@ -3,19 +3,26 @@ import { useLocation, Link } from 'react-router-dom';
 
 import WaveSvg from '../components/layout/WaveSvg';
 import BackLink from '../components/utils/BackLink';
+import FgiName from '../components/layout/FgiName';
+import FgiEmail from '../components/layout/FgiEmail';
+import FgiPass from '../components/layout/FgiPass';
+import SubmitBtn from '../components/layout/SubmitBtn';
 
 const Login = () => {
    const location = useLocation();
+   const path = location.pathname;
 
    let title;
-   if (location.pathname === '/login') {
-      title = <h3 className="form__header--title">Login</h3>;
-   } else {
-      title = <h3 className="form__header--title">Sign Up</h3>;
-   }
-
+   let forgetPassword;
    let footer;
-   if (location.pathname === '/login') {
+
+   if (path === '/login') {
+      title = <h3 className="form__header--title">Login</h3>;
+      forgetPassword = (
+         <Link to="/forgetPassword" className="form__body--forget-password">
+            Forget your password?
+         </Link>
+      );
       footer = (
          <div className="form__footer">
             <span>I&#39;m a new user, </span>
@@ -25,6 +32,8 @@ const Login = () => {
          </div>
       );
    } else {
+      title = <h3 className="form__header--title">Sign Up</h3>;
+      forgetPassword = null;
       footer = (
          <div className="form__footer">
             <span>I&#39;m already a member, </span>
@@ -42,7 +51,13 @@ const Login = () => {
                <BackLink route="/" />
                {title}
             </div>
-            <div className="form__body"></div>
+            <div className="form__body">
+               <FgiName path={path} />
+               <FgiEmail />
+               <FgiPass name="password" />
+               <SubmitBtn path={path} />
+               {forgetPassword}
+            </div>
             {footer}
             <WaveSvg></WaveSvg>
          </form>
