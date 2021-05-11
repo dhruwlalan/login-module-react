@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 import WaveSvg from '../components/layout/WaveSvg';
@@ -10,8 +11,10 @@ import FgiPass from '../components/layout/FgiPass';
 import SubmitBtn from '../components/layout/SubmitBtn';
 
 import { alert } from '../redux/alert/alertActions';
+import { signUp, signIn } from '../redux/user/userActions';
+import { selectUserStatus } from '../redux/user/userSelector';
 
-const Login = ({ alert }) => {
+const Login = ({ alert, register, login, userStatus }) => {
    const path = useLocation().pathname;
    const [fullname, setFullname] = useState('');
    const [fullnameStatus, setFullnameStatus] = useState('notEntered');
@@ -52,12 +55,17 @@ const Login = ({ alert }) => {
       submitBtn = <SubmitBtn name="Create Account" status={submitBtnStatus} />;
    }
 
-   const signup = () => {
-      console.log({ fullname, email, password });
-   };
-   const login = () => {
-      console.log({ fullname, email, password });
-   };
+   useEffect(() => {
+      if (!userStatus?.type) return;
+
+      alert(userStatus.type, userStatus.message);
+      setSubmitBtnStatus(userStatus.type);
+      if (userStatus.type === 'error') {
+         setTimeout(() => {
+            setSubmitBtnStatus('notSubmitted');
+         }, 1000);
+      }
+   }, [userStatus, alert]);
 
    const handleSubmit = (e) => {
       e.preventDefault();
@@ -78,9 +86,9 @@ const Login = ({ alert }) => {
       } else {
          setSubmitBtnStatus('submitted');
          if (path === '/signup') {
-            signup();
+            register(fullname, email, password);
          } else {
-            login();
+            login(email, password);
          }
       }
    };
@@ -120,7 +128,13 @@ const Login = ({ alert }) => {
    );
 };
 
+const mapStateToProps = createStructuredSelector({
+   userStatus: selectUserStatus,
+});
 const mapDispatchToProps = (dispatch) => ({
    alert: (type, msg) => dispatch(alert(type, msg)),
+   register: (fullName, email, password) =>
+      dispatch(signUp({ email, password, fullName })),
+   login: (email, password) => dispatch(signIn({ email, password })),
 });
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

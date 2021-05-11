@@ -11,7 +11,7 @@ const fb = firebase;
 const auth = firebase.auth();
 const storageRef = firebase.storage().ref();
 
-export const getCurrentUser = () => {
+export const resolveUser = () => {
    return new Promise((resolve, reject) => {
       const unsubscribe = auth.onAuthStateChanged((user) => {
          unsubscribe();
@@ -19,5 +19,11 @@ export const getCurrentUser = () => {
       }, reject);
    });
 };
+
+export const getCurrentUser = () => {
+   return auth.currentUser;
+};
+
+// auth.signOut();
 
 export { fb, auth, storageRef };
