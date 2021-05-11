@@ -6,7 +6,7 @@ import AlertBox from './components/utils/AlertBox';
 import Spinner from './components/utils/Spinner';
 import ProtectedRoute from './components/utils/ProtectedRoute';
 import PublicRoute from './components/utils/PublicRoute';
-import { checkUserSession } from './redux/user/userActions';
+import { checkUserLoggedIn } from './redux/user/userActions';
 
 const Home = lazy(() => import('./pages/Home'));
 const Edit = lazy(() => import('./pages/Edit'));
@@ -15,10 +15,10 @@ const ForgetPassword = lazy(() => import('./pages/ForgetPassword'));
 const AccountManagement = lazy(() => import('./pages/AccountManagement'));
 const PageNotFound = lazy(() => import('./pages/PageNotFound'));
 
-function App({ checkUserSession }) {
+function App({ checkUserLoggedIn }) {
    useEffect(() => {
-      checkUserSession();
-   }, [checkUserSession]);
+      checkUserLoggedIn();
+   }, [checkUserLoggedIn]);
 
    return (
       <>
@@ -49,6 +49,6 @@ function App({ checkUserSession }) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-   checkUserSession: () => dispatch(checkUserSession()),
+   checkUserLoggedIn: () => dispatch(checkUserLoggedIn()),
 });
 export default connect(null, mapDispatchToProps)(App);

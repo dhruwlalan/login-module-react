@@ -1,75 +1,79 @@
 import { takeLatest, put, all, call } from 'redux-saga/effects';
 
+import hold from '../../components/vanilla/hold';
 import userActionTypes from './userActionTypes';
 import { storeUser, setStatus } from './userActions';
-import { getCurrentUser } from '../../firebase/firebaseUtils';
+import { auth, resolveUser, getCurrentUser } from '../../firebase/firebaseUtils';
 
-export function* isUserAuthenticated() {
+export function* isUserLoggedIn() {
    try {
-      const user = yield getCurrentUser();
+      const user = yield resolveUser();
       if (!user) {
          yield put(storeUser(null));
-         yield put(setStatus('error', 'user not logged in'));
       } else {
          yield put(storeUser(user));
-         yield put(setStatus('success', 'user is logged in'));
       }
    } catch (error) {
       yield put(setStatus('error', error.message));
    }
 }
-export function* onCheckUserSession() {
-   yield takeLatest(userActionTypes.CHECK_USER_SESSION, isUserAuthenticated);
+export function* onCheckUserLoggedIn() {
+   yield takeLatest(userActionTypes.CHECK_USER_LOGGED_IN, isUserLoggedIn);
 }
 
-// export function* signInWithEmail({ payload: { email, password } }) {
-//    try {
-//       const { user } = yield auth.signInWithEmailAndPassword(email, password);
-//       yield put(signInSuccess(user));
-//    } catch (error) {
-//       yield put(signInFailure(error));
-//    }
-// }
-// export function* onSignInStart() {
-//    yield takeLatest(userActionTypes.SIGN_IN_START, signInWithEmail);
-// }
-
-// export function* signOut() {
-//    try {
-//       yield auth.signOut();
-//       yield put(signOutSuccess());
-//    } catch (error) {
-//       yield put(signOutFailure(error));
-//    }
-// }
-// export function* onSignOutStart() {
-//    yield takeLatest(userActionTypes.SIGN_OUT_START, signOut);
-// }
-
-// export function* signUp({ payload: { email, password, fullName } }) {
-//    try {
-//       const { user } = yield auth.createUserWithEmailAndPassword(email, password);
-//       yield user.updateProfile({
-//          displayName: fullName,
-//          photoURL: context.getters.defaultPhotoURL,
-//       });
-//       yield put(signUpSuccess({ user, additionalData: { fullName } }));
-//    } catch (error) {
-//       yield put(signUpFailure(error));
-//    }
-// }
-// export function* onSignUpStart() {
-//    yield takeLatest(userActionTypes.SIGN_UP_START, signUp);
-// }
-// export function* signInAfterSignUp({ payload: { user, additionalData } }) {
-//    yield getSnapshotFromUserAuth(user, additionalData);
-// }
-// export function* onSignUpSuccess() {
-//    yield takeLatest(userActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
-// }
-
-function* userSagas() {
-   // yield all([call(onCheckUserSession), call(onSignUp), call(onSignIn), call(onSignOut)]);
-   yield all([call(onCheckUserSession)]);
+export function* signup({ payload: { email, password, fullName } }) {
+   try {
+      const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+      yield user.updateProfile({
+         displayName: fullName,
+         photoURL:
+            'https://firebasestorage.googleapis.com/v0/b/login-module-vue.appspot.com/o/default.png?alt=media&token=ac9c3618-ab29-42b5-8fc4-54d31cbe68a2',
+      });
+      const currentUser = getCurrentUser();
+      if (currentUser) {
+         yield put(setStatus('success', 'User Created Successfully!'));
+         yield hold();
+         yield put(storeUser(currentUser));
+      } else {
+         throw new Error('Unable to store user!');
+      }
+   } catch (error) {
+      yield put(storeUser(null));
+      if (error.code === 'auth/email-already-in-use') {
+         yield put(setStatus('error', 'Email already exists!'));
+      } else {
+         yield put(setStatus('error', error.message));
+      }
+   }
 }
-export default userSagas;
+export function* onSignup() {
+   yield takeLatest(userActionTypes.SIGN_UP, signup);
+}
+
+export function* signin({ payload: { email, password } }) {
+   try {
+      yield auth.signInWithEmailAndPassword(email, password);
+      const currentUser = getCurrentUser();
+      if (currentUser) {
+         yield put(setStatus('success', 'User Logged In Successfully!'));
+         yield hold();
+         yield put(storeUser(currentUser));
+      } else {
+         throw new Error('Unable to store user!');
+      }
+   } catch (error) {
+      yield put(storeUser(null));
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+         yield put(setStatus('error', 'Invalid email or password!'));
+      } else {
+         yield put(setStatus('error', error.message));
+      }
+   }
+}
+export function* onSignin() {
+   yield takeLatest(userActionTypes.SIGN_IN, signin);
+}
+
+export default function* userSagas() {
+   yield all([call(onCheckUserLoggedIn), call(onSignup), call(onSignin)]);
+}

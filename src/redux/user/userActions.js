@@ -1,12 +1,15 @@
 import userActionTypes from './userActionTypes';
 
-// uid: auth.currentUser.uid,
-// email: auth.currentUser.email,
-// displayName: auth.currentUser.displayName,
-// photoURL: auth.currentUser.photoURL,
 export const storeUser = (user) => ({
    type: userActionTypes.STORE_USER,
-   payload: user,
+   payload: user
+      ? {
+           uid: user.uid,
+           email: user.email,
+           displayName: user.displayName,
+           photoURL: user.photoURL,
+        }
+      : null,
 });
 
 export const setStatus = (type, message) => ({
@@ -14,8 +17,8 @@ export const setStatus = (type, message) => ({
    payload: { type, message },
 });
 
-export const checkUserSession = () => ({
-   type: userActionTypes.CHECK_USER_SESSION,
+export const checkUserLoggedIn = () => ({
+   type: userActionTypes.CHECK_USER_LOGGED_IN,
 });
 
 export const signUp = ({ email, password, fullName }) => ({
