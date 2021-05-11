@@ -1,8 +1,9 @@
-const hold = () =>
-   new Promise((res) => {
+const hold = (ms = 1000) => {
+   return new Promise((res) => {
       setTimeout(() => {
          res(true);
-      }, 1000);
+      }, ms);
    });
+};
 
 export default hold;

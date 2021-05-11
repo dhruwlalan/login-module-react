@@ -11,7 +11,6 @@ const PrivateRoute = ({ currentUser, children, ...rest }) => {
       <Route
          {...rest}
          render={({ location }) => {
-            console.log(currentUser);
             if (currentUser === 'checking') {
                return <Spinner />;
             } else if (currentUser) {

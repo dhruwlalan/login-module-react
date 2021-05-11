@@ -32,7 +32,8 @@ export function* signup({ payload: { email, password, fullName } }) {
       const currentUser = getCurrentUser();
       if (currentUser) {
          yield put(setStatus('success', 'User Created Successfully!'));
-         yield hold();
+         yield hold(1200);
+         yield put(setStatus(null));
          yield put(storeUser(currentUser));
       } else {
          throw new Error('Unable to store user!');
@@ -56,7 +57,8 @@ export function* signin({ payload: { email, password } }) {
       const currentUser = getCurrentUser();
       if (currentUser) {
          yield put(setStatus('success', 'User Logged In Successfully!'));
-         yield hold();
+         yield hold(1200);
+         yield put(setStatus(null));
          yield put(storeUser(currentUser));
       } else {
          throw new Error('Unable to store user!');
@@ -74,6 +76,24 @@ export function* onSignin() {
    yield takeLatest(userActionTypes.SIGN_IN, signin);
 }
 
+export function* signout() {
+   try {
+      yield auth.signOut();
+      yield put(storeUser(null));
+   } catch (error) {
+      yield put(storeUser(null));
+      yield put(setStatus('error', error.message));
+   }
+}
+export function* onSignout() {
+   yield takeLatest(userActionTypes.SIGN_OUT, signout);
+}
+
 export default function* userSagas() {
-   yield all([call(onCheckUserLoggedIn), call(onSignup), call(onSignin)]);
+   yield all([
+      call(onCheckUserLoggedIn),
+      call(onSignup),
+      call(onSignin),
+      call(onSignout),
+   ]);
 }
