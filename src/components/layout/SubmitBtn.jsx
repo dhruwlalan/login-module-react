@@ -1,13 +1,10 @@
 import React from 'react';
 
-const SubmitBtn = ({ path, status }) => {
-   const text = path === '/login' ? 'Login' : 'Creat Account';
-   status = status ?? 'notSubmitted';
-
+const SubmitBtn = ({ status, name }) => {
    let content;
    if (status === 'notSubmitted') {
-      content = <span>{text}</span>;
-   } else if (status === 'spinner') {
+      content = <span>{name}</span>;
+   } else if (status === 'submitted') {
       content = <span className="spinner-white" />;
    } else if (status === 'success') {
       content = <span>&#10003;</span>;
@@ -16,7 +13,6 @@ const SubmitBtn = ({ path, status }) => {
    } else {
       content = <span>button</span>;
    }
-
    return <button className="btn">{content}</button>;
 };
 

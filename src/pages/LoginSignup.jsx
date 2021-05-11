@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import WaveSvg from '../components/layout/WaveSvg';
 import BackLink from '../components/utils/BackLink';
@@ -8,7 +9,9 @@ import FgiEmail from '../components/layout/FgiEmail';
 import FgiPass from '../components/layout/FgiPass';
 import SubmitBtn from '../components/layout/SubmitBtn';
 
-const Login = () => {
+import { alert } from '../redux/alert/alertActions';
+
+const Login = ({ alert }) => {
    const path = useLocation().pathname;
    const [fullname, setFullname] = useState('');
    const [fullnameStatus, setFullnameStatus] = useState('notEntered');
@@ -16,8 +19,9 @@ const Login = () => {
    const [emailStatus, setEmailStatus] = useState('notEntered');
    const [password, setPassword] = useState('');
    const [passwordStatus, setPasswordStatus] = useState('notEntered');
+   const [submitBtnStatus, setSubmitBtnStatus] = useState('notSubmitted');
 
-   let title, forgetPassword, footer;
+   let title, forgetPassword, footer, submitBtn;
    if (path === '/login') {
       title = <h3 className="form__header--title">Login</h3>;
       forgetPassword = (
@@ -33,6 +37,7 @@ const Login = () => {
             </Link>
          </div>
       );
+      submitBtn = <SubmitBtn name="Login" status={submitBtnStatus} />;
    } else {
       title = <h3 className="form__header--title">Sign Up</h3>;
       forgetPassword = null;
@@ -44,10 +49,44 @@ const Login = () => {
             </Link>
          </div>
       );
+      submitBtn = <SubmitBtn name="Create Account" status={submitBtnStatus} />;
    }
 
+   const signup = () => {
+      console.log({ fullname, email, password });
+   };
+   const login = () => {
+      console.log({ fullname, email, password });
+   };
+
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      if (path === '/signup') {
+         if (fullnameStatus === 'notEntered') {
+            alert('error', 'Please enter your full name.');
+            return;
+         }
+      }
+      if (emailStatus === 'notEntered') {
+         alert('error', 'Please enter your email address.');
+      } else if (emailStatus === 'EnteredButInvalid') {
+         alert('error', 'Please enter a valid email address.');
+      } else if (passwordStatus === 'notEntered') {
+         alert('error', 'Please enter your password.');
+      } else if (passwordStatus === 'EnteredButInvalid') {
+         alert('error', 'Password should be at least 8 characters long.');
+      } else {
+         setSubmitBtnStatus('submitted');
+         if (path === '/signup') {
+            signup();
+         } else {
+            login();
+         }
+      }
+   };
+
    return (
-      <form className="form" autoComplete="off">
+      <form className="form" autoComplete="off" onSubmit={handleSubmit}>
          <div className="form__header">
             <BackLink route="/" />
             {title}
@@ -72,7 +111,7 @@ const Login = () => {
                passwordStatus={passwordStatus}
                updatePasswordStatus={setPasswordStatus}
             />
-            <SubmitBtn path={path} />
+            {submitBtn}
             {forgetPassword}
          </div>
          {footer}
@@ -81,4 +120,7 @@ const Login = () => {
    );
 };
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+   alert: (type, msg) => dispatch(alert(type, msg)),
+});
+export default connect(null, mapDispatchToProps)(Login);
