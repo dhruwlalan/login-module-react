@@ -20,7 +20,6 @@ export function* onAlert() {
    yield takeLatest(alertActionTypes.ALERT, alert);
 }
 
-function* alertSagas() {
+export default function* alertSagas() {
    yield all([call(onAlert)]);
 }
-export default alertSagas;

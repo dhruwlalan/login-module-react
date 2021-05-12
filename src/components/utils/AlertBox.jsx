@@ -1,16 +1,32 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Animate } from 'react-move';
-import { easeExpOut } from 'd3-ease';
 
 import BodyPortal from './BodyPortal';
 
 const AlertBox = ({ alert }) => {
+   const [showAlert, setShowAlert] = useState(alert.showAlert);
    const nodeRef = useRef(null);
+
+   useEffect(() => {
+      const node = nodeRef.current;
+      if (alert.showAlert) {
+         setShowAlert(true);
+         console.log('enter');
+         node.classList.remove('slideOutUp');
+         node.classList.add('slideInDown');
+      } else {
+         setTimeout(() => {
+            setShowAlert(false);
+         }, 400);
+         console.log('leave');
+         node.classList.remove('slideInDown');
+         node.classList.add('slideOutUp');
+      }
+   }, [alert]);
 
    return (
       <BodyPortal>
-         <Animate
+         {/* <Animate
             nodeRef={nodeRef}
             start={() => ({
                y: -150,
@@ -31,7 +47,14 @@ const AlertBox = ({ alert }) => {
                   </div>
                );
             }}
-         </Animate>
+         </Animate> */}
+         <div
+            ref={nodeRef}
+            className={`alert alert--${alert.type}`}
+            style={{ display: showAlert ? 'block' : 'none' }}
+         >
+            {alert.msg}
+         </div>
       </BodyPortal>
    );
 };

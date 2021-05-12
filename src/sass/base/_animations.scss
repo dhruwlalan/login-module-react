@@ -23,7 +23,7 @@
    animation: slideInDown 0.4s ease-out;
 }
 .slideOutUp {
-   animation: slideOutUp 0.3s;
+   animation: slideOutUp 0.3s forwards;
 }
 
 @keyframes zoom-in {
