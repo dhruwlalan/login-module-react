@@ -3,7 +3,7 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import hold from '../../components/vanilla/hold';
 import userActionTypes from './userActionTypes';
 import { storeUser, setStatus } from './userActions';
-import { auth, resolveUser, getCurrentUser } from '../../firebase/firebaseUtils';
+import { fb, auth, resolveUser, getCurrentUser } from '../../firebase/firebaseUtils';
 
 export function* isUserLoggedIn() {
    try {
@@ -102,6 +102,46 @@ export function* onForgetPassword() {
    yield takeLatest(userActionTypes.FORGET_PASSWORD, forgetPassword);
 }
 
+function* _reAuthenticateUser(password) {
+   try {
+      const user = getCurrentUser();
+      const credentials = fb.auth.EmailAuthProvider.credential(user.email, password);
+      yield user.reauthenticateWithCredential(credentials);
+      return 'success';
+   } catch (error) {
+      return error.code;
+   }
+}
+
+export function* updatePassword({ payload: { currentPassword, newPassword } }) {
+   const res = yield _reAuthenticateUser(currentPassword);
+   if (res === 'success') {
+      try {
+         const user = getCurrentUser();
+         yield user.updatePassword(newPassword);
+         yield put(storeUser(getCurrentUser()));
+         yield put(setStatus('success', 'Password Updated Successfully!'));
+         yield put(setStatus(null));
+      } catch (error) {
+         yield put(setStatus('error', error.message));
+      }
+   } else {
+      if (res === 'auth/wrong-password') {
+         yield put(setStatus('error', 'Invalid Current Password!'));
+         yield put(setStatus(null));
+      } else if (res === 'auth/too-many-requests') {
+         yield put(setStatus('error', 'Please try after some time!'));
+         yield put(setStatus(null));
+      } else {
+         yield put(setStatus('error', 'something went wrong!'));
+         yield put(setStatus(null));
+      }
+   }
+}
+export function* onUpdatePassword() {
+   yield takeLatest(userActionTypes.UPDATE_PASSWORD, updatePassword);
+}
+
 export default function* userSagas() {
    yield all([
       call(onCheckUserLoggedIn),
@@ -109,5 +149,6 @@ export default function* userSagas() {
       call(onSignin),
       call(onSignout),
       call(onForgetPassword),
+      call(onUpdatePassword),
    ]);
 }

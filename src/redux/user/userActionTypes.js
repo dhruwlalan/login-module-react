@@ -9,6 +9,8 @@ const userActionTypes = {
    SIGN_UP: 'SIGN_UP',
 
    FORGET_PASSWORD: 'FORGET_PASSWORD',
+
+   UPDATE_PASSWORD: 'UPDATE_PASSWORD',
 };
 
 export default userActionTypes;

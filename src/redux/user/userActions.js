@@ -39,3 +39,8 @@ export const forgetPassword = (email) => ({
    type: userActionTypes.FORGET_PASSWORD,
    payload: { email },
 });
+
+export const updatePassword = ({ currentPassword, newPassword }) => ({
+   type: userActionTypes.UPDATE_PASSWORD,
+   payload: { currentPassword, newPassword },
+});
