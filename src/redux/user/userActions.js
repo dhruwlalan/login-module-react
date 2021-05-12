@@ -54,3 +54,8 @@ export const confirmPasswordReset = ({ actionCode, newPassword }) => ({
    type: userActionTypes.CONFIRM_PASSWORD_RESET,
    payload: { actionCode, newPassword },
 });
+
+export const updateProfile = (obj) => ({
+   type: userActionTypes.UPDATE_PROFILE,
+   payload: obj,
+});

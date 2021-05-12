@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -8,14 +8,30 @@ import FgiName from '../components/layout/FgiName';
 import FgiEmail from '../components/layout/FgiEmail';
 import FgiPass from '../components/layout/FgiPass';
 import SubmitBtn from '../components/layout/SubmitBtn';
+import ImageCrop from '../components/layout/ImageCrop';
 import { alert } from '../redux/alert/alertActions';
-import { updatePassword, updateEmail } from '../redux/user/userActions';
-import { selectCurrentUser, selectUserStatus } from '../redux/user/userSelector';
+import { updatePassword, updateEmail, updateProfile } from '../redux/user/userActions';
+import {
+   selectCurrentUser,
+   selectUserStatus,
+   selectDefaultPhotoURL,
+} from '../redux/user/userSelector';
 
-const Edit = ({ user, alert, updatePassword, userStatus, updateEmail }) => {
+const Edit = ({
+   user,
+   alert,
+   userStatus,
+   defaultPhotoURL,
+   updatePassword,
+   updateEmail,
+   updateProfile,
+}) => {
    const [fullname, setFullname] = useState(user.displayName);
    const [fullnameStatus, setFullnameStatus] = useState('notEntered');
    const [photoURL, setPhotoURL] = useState(user.photoURL);
+   const [openImageCropModal, setOpenImageCropModal] = useState(false);
+   const [newPhotoDataUrl, setNewPhotoDataUrl] = useState(null);
+   const [newPhotoFile, setNewPhotoFile] = useState(null);
 
    const [email, setEmail] = useState(user.email);
    const [emailStatus, setEmailStatus] = useState('notEntered');
@@ -52,6 +68,28 @@ const Edit = ({ user, alert, updatePassword, userStatus, updateEmail }) => {
       }, 1000);
    }, [userStatus, alert, submittedBtn]);
 
+   const uploadImageInput = useRef(null);
+   const getNewPhotoFromUser = () => {
+      const photo = uploadImageInput.current.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(photo);
+      reader.onload = (e) => {
+         setNewPhotoDataUrl(e.target.result);
+         uploadImageInput.current.value = '';
+         setOpenImageCropModal(true);
+      };
+   };
+   const setProfilePicToDefault = () => {
+      setPhotoURL(defaultPhotoURL);
+      setNewPhotoDataUrl(null);
+      setNewPhotoFile(null);
+   };
+   const onCropped = (cropImageUrl) => {
+      setNewPhotoDataUrl(null);
+      setPhotoURL(cropImageUrl.base64);
+      setNewPhotoFile(cropImageUrl.photo);
+   };
+
    const handlePasswordUpdate = (e) => {
       e.preventDefault();
       if (currentPasswordStatus === 'notEntered') {
@@ -68,7 +106,6 @@ const Edit = ({ user, alert, updatePassword, userStatus, updateEmail }) => {
          updatePassword(currentPassword, newPassword);
       }
    };
-
    const handleEmailUpdate = (e) => {
       e.preventDefault();
       if (emailStatus === 'notEntered') {
@@ -85,13 +122,36 @@ const Edit = ({ user, alert, updatePassword, userStatus, updateEmail }) => {
          updateEmail(email, password);
       }
    };
+   const handleProfileUpdate = (e) => {
+      e.preventDefault();
+      if (fullnameStatus === 'notEntered') {
+         alert('error', 'Please enter your full name.');
+      } else if (emailStatus === 'notEntered') {
+         alert('error', 'Please enter your email address.');
+      } else if (emailStatus === 'EnteredButInvalid') {
+         alert('error', 'Please enter a valid email address.');
+      } else {
+         setUpdateProfileBtnStatus('submitted');
+         setSubmittedBtn('profile');
+         updateProfile({ fullname });
+         if (photoURL === defaultPhotoURL) {
+            updateProfile({ photoURL: defaultPhotoURL });
+         } else if (newPhotoFile) {
+            updateProfile({ newPhotoFile: newPhotoFile });
+         }
+      }
+   };
 
    return (
       <>
          <Navbar page="edit" />
          <Pipes />
          <div className="section section--edit">
-            <form className="form form--edit" autoComplete="off">
+            <form
+               className="form form--edit"
+               autoComplete="off"
+               onSubmit={handleProfileUpdate}
+            >
                <h3 className="form__header--midtitle">Update Your Profile</h3>
                <div className="form__body">
                   <FgiName
@@ -100,7 +160,12 @@ const Edit = ({ user, alert, updatePassword, userStatus, updateEmail }) => {
                      fullnameStatus={fullnameStatus}
                      updateFullnameStatus={setFullnameStatus}
                   />
-                  {/* image-crop */}
+                  <ImageCrop
+                     img={newPhotoDataUrl}
+                     openModal={openImageCropModal}
+                     updateModal={setOpenImageCropModal}
+                     onCropped={onCropped}
+                  />
                   <div className="form__group__profile">
                      <img
                         className="form__group__profile--preview"
@@ -114,12 +179,14 @@ const Edit = ({ user, alert, updatePassword, userStatus, updateEmail }) => {
                         type="file"
                         accept="image/*"
                         name="photo"
+                        onChange={getNewPhotoFromUser}
+                        ref={uploadImageInput}
                      />
                      <div className="form__group__profile--links">
                         <label
                            className="form__group__profile--remove"
                            id="removeImageLabel"
-                           click="setProfilePicToDefault"
+                           onClick={setProfilePicToDefault}
                         >
                            Remove Photo
                         </label>
@@ -195,11 +262,13 @@ const Edit = ({ user, alert, updatePassword, userStatus, updateEmail }) => {
 const mapStateToProps = createStructuredSelector({
    user: selectCurrentUser,
    userStatus: selectUserStatus,
+   defaultPhotoURL: selectDefaultPhotoURL,
 });
 const mapDispatchToProps = (dispatch) => ({
    alert: (type, msg) => dispatch(alert(type, msg)),
    updatePassword: (currentPassword, newPassword) =>
       dispatch(updatePassword({ currentPassword, newPassword })),
    updateEmail: (email, password) => dispatch(updateEmail({ email, password })),
+   updateProfile: (obj) => dispatch(updateProfile(obj)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Edit);

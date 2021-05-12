@@ -3,7 +3,13 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import hold from '../../components/vanilla/hold';
 import userActionTypes from './userActionTypes';
 import { storeUser, setStatus } from './userActions';
-import { fb, auth, resolveUser, getCurrentUser } from '../../firebase/firebaseUtils';
+import {
+   fb,
+   auth,
+   storageRef,
+   resolveUser,
+   getCurrentUser,
+} from '../../firebase/firebaseUtils';
 
 function* isUserLoggedIn() {
    try {
@@ -183,6 +189,42 @@ export function* onConfirmPasswordReset() {
    yield takeLatest(userActionTypes.CONFIRM_PASSWORD_RESET, confirmPasswordReset);
 }
 
+function* updateProfile({ payload }) {
+   try {
+      const user = getCurrentUser();
+      if (payload.fullname) {
+         yield user.updateProfile({
+            displayName: payload.fullname,
+         });
+      }
+      if (payload.photoURL) {
+         yield user.updateProfile({
+            photoURL: payload.photoURL,
+         });
+      } else if (payload.newPhotoFile) {
+         const newPhoto = payload.newPhotoFile;
+         const ext = newPhoto.name.split('.').pop();
+         const name = `${user.uid}-photo.${ext}`;
+         const snapshot = yield storageRef.child(name).put(newPhoto, {
+            contentType: 'image/jpeg',
+         });
+         const photoURL = yield snapshot.ref.getDownloadURL();
+         yield user.updateProfile({
+            photoURL,
+         });
+      }
+      yield put(storeUser(getCurrentUser()));
+      yield put(setStatus('success', 'Profile Updated Successfully!'));
+      yield put(setStatus(null));
+   } catch (error) {
+      yield put(setStatus('error', error.message));
+      yield put(setStatus(null));
+   }
+}
+export function* onUpdateProfile() {
+   yield takeLatest(userActionTypes.UPDATE_PROFILE, updateProfile);
+}
+
 export default function* userSagas() {
    yield all([
       call(onCheckUserLoggedIn),
@@ -193,5 +235,6 @@ export default function* userSagas() {
       call(onUpdatePassword),
       call(onUpdateEmail),
       call(onConfirmPasswordReset),
+      call(onUpdateProfile),
    ]);
 }
