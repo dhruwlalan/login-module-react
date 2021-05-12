@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 
 const FgiPass = ({
@@ -14,17 +14,16 @@ const FgiPass = ({
    const [showEyeSvg, setShowEyeSvg] = useState(false);
    const [showPassword, setShowPassword] = useState(false);
 
-   const handleChange = (e) => {
-      const value = e.target.value;
-      updatePassword(value);
-      if (value.length === 0) {
+   useEffect(() => {
+      if (password.length === 0) {
          updatePasswordStatus('notEntered');
-      } else if (value.length > 7) {
+      } else if (password.length > 7) {
          updatePasswordStatus('EnteredAndValid');
       } else {
          updatePasswordStatus('EnteredButInvalid');
       }
-   };
+   }, [password, updatePasswordStatus]);
+
    const togglePassword = () => {
       setShowPassword(!showPassword);
    };
@@ -137,7 +136,7 @@ const FgiPass = ({
             id={`${label}Input`}
             type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={handleChange}
+            onChange={(e) => updatePassword(e.target.value)}
             onFocus={focusIn}
             onBlur={focusOut}
          />

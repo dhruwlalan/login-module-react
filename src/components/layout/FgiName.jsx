@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 
 const FgiName = ({
@@ -8,17 +8,18 @@ const FgiName = ({
    fullnameStatus,
    updateFullnameStatus,
 }) => {
+   path = path ?? 'no-path';
    const [shouldHover, setShouldHover] = useState(false);
    const [shouldFocus, setShouldFocus] = useState(false);
 
-   const handleChange = (e) => {
-      updateFullname(e.target.value);
-      if (e.target.value.length === 0) {
+   useEffect(() => {
+      if (fullname.length === 0) {
          updateFullnameStatus('notEntered');
       } else {
          updateFullnameStatus('EnteredAndValid');
       }
-   };
+   }, [fullname, updateFullnameStatus]);
+
    const mouseEnter = () => {
       if (fullname.length === 0 && !shouldFocus) {
          setShouldHover(true);
@@ -40,7 +41,7 @@ const FgiName = ({
       'focus-input': shouldFocus,
    });
    const groupStyle = {
-      display: path === '/signup' ? 'block' : 'none',
+      display: path === '/login' ? 'none' : 'block',
       border: fullnameStatus === 'EnteredAndValid' ? '1px solid #002fff' : null,
    };
    const labelClass = classNames('form__group-label', {
@@ -63,7 +64,7 @@ const FgiName = ({
             id="nameInput"
             type="text"
             value={fullname}
-            onChange={handleChange}
+            onChange={(e) => updateFullname(e.target.value)}
             onFocus={focusIn}
             onBlur={focusOut}
          />

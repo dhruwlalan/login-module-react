@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import validator from 'email-validator';
 
@@ -6,17 +6,16 @@ const FgiEmail = ({ email, updateEmail, emailStatus, updateEmailStatus }) => {
    const [shouldHover, setShouldHover] = useState(false);
    const [shouldFocus, setShouldFocus] = useState(false);
 
-   const handleChange = (e) => {
-      const value = e.target.value;
-      updateEmail(value);
-      if (value.length === 0) {
+   useEffect(() => {
+      if (email.length === 0) {
          updateEmailStatus('notEntered');
-      } else if (validator.validate(value)) {
+      } else if (validator.validate(email)) {
          updateEmailStatus('EnteredAndValid');
       } else {
          updateEmailStatus('EnteredButInvalid');
       }
-   };
+   }, [email, updateEmailStatus]);
+
    const mouseEnter = () => {
       if (email.length === 0 && !shouldFocus) {
          setShouldHover(true);
@@ -72,7 +71,7 @@ const FgiEmail = ({ email, updateEmail, emailStatus, updateEmailStatus }) => {
             id="emailInput"
             type="email"
             value={email}
-            onChange={handleChange}
+            onChange={(e) => updateEmail(e.target.value)}
             onFocus={focusIn}
             onBlur={focusOut}
          />
