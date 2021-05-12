@@ -1,20 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import SubmitBtn from '../components/layout/SubmitBtn';
 import BackLink from '../components/utils/BackLink';
 import FgiEmail from '../components/layout/FgiEmail';
 
 import { alert } from '../redux/alert/alertActions';
+import { forgetPassword } from '../redux/user/userActions';
+import { selectUserStatus } from '../redux/user/userSelector';
 
-const ForgetPassword = ({ alert }) => {
+const ForgetPassword = ({ alert, forgetPassword, userStatus }) => {
+   const history = useHistory();
    const [email, setEmail] = useState('');
    const [emailStatus, setEmailStatus] = useState('notEntered');
    const [submitBtnStatus, setSubmitBtnStatus] = useState('notSubmitted');
 
-   const forgetPassword = () => {
-      console.log({ email });
-   };
+   useEffect(() => {
+      if (!userStatus?.type || !userStatus?.message) return;
+
+      alert(userStatus.type, userStatus.message);
+      setSubmitBtnStatus(userStatus.type);
+      if (userStatus.type === 'error') {
+         setTimeout(() => {
+            setSubmitBtnStatus('notSubmitted');
+         }, 1000);
+      }
+      if (userStatus.type === 'success') {
+         setTimeout(() => {
+            history.push('/login');
+         }, 1200);
+      }
+   }, [userStatus, alert, history]);
 
    const handleSubmit = (e) => {
       e.preventDefault();
@@ -24,7 +42,7 @@ const ForgetPassword = ({ alert }) => {
          alert('error', 'Please enter a valid email address.');
       } else {
          setSubmitBtnStatus('submitted');
-         forgetPassword();
+         forgetPassword(email);
       }
    };
 
@@ -50,7 +68,11 @@ const ForgetPassword = ({ alert }) => {
    );
 };
 
+const mapStateToProps = createStructuredSelector({
+   userStatus: selectUserStatus,
+});
 const mapDispatchToProps = (dispatch) => ({
    alert: (type, msg) => dispatch(alert(type, msg)),
+   forgetPassword: (email) => dispatch(forgetPassword(email)),
 });
-export default connect(null, mapDispatchToProps)(ForgetPassword);
+export default connect(mapStateToProps, mapDispatchToProps)(ForgetPassword);

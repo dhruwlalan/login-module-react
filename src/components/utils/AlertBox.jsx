@@ -11,14 +11,12 @@ const AlertBox = ({ alert }) => {
       const node = nodeRef.current;
       if (alert.showAlert) {
          setShowAlert(true);
-         console.log('enter');
          node.classList.remove('slideOutUp');
          node.classList.add('slideInDown');
       } else {
          setTimeout(() => {
             setShowAlert(false);
          }, 400);
-         console.log('leave');
          node.classList.remove('slideInDown');
          node.classList.add('slideOutUp');
       }

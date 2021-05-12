@@ -89,11 +89,25 @@ export function* onSignout() {
    yield takeLatest(userActionTypes.SIGN_OUT, signout);
 }
 
+export function* forgetPassword({ payload: { email } }) {
+   try {
+      yield auth.sendPasswordResetEmail(email);
+      yield put(setStatus('success', 'Link sent to email successfully!'));
+      yield put(setStatus(null));
+   } catch (error) {
+      yield put(setStatus('error', error.message));
+   }
+}
+export function* onForgetPassword() {
+   yield takeLatest(userActionTypes.FORGET_PASSWORD, forgetPassword);
+}
+
 export default function* userSagas() {
    yield all([
       call(onCheckUserLoggedIn),
       call(onSignup),
       call(onSignin),
       call(onSignout),
+      call(onForgetPassword),
    ]);
 }

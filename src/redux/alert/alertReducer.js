@@ -2,8 +2,8 @@ import alertActionTypes from './alertActionTypes';
 
 const INITIAL_STATE = {
    showAlert: false,
-   type: 'success',
-   msg: 'test',
+   type: null,
+   msg: null,
 };
 
 const alertReducer = (state = INITIAL_STATE, action) => {

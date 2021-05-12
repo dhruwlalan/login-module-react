@@ -34,3 +34,8 @@ export const signIn = ({ email, password }) => ({
 export const signOut = () => ({
    type: userActionTypes.SIGN_OUT,
 });
+
+export const forgetPassword = (email) => ({
+   type: userActionTypes.FORGET_PASSWORD,
+   payload: { email },
+});

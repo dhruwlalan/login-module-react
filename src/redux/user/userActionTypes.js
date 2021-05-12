@@ -3,9 +3,12 @@ const userActionTypes = {
    SET_STATUS: 'SET_STATUS',
 
    CHECK_USER_LOGGED_IN: 'CHECK_USER_LOGGED_IN',
+
    SIGN_IN: 'SIGN_IN',
    SIGN_OUT: 'SIGN_OUT',
    SIGN_UP: 'SIGN_UP',
+
+   FORGET_PASSWORD: 'FORGET_PASSWORD',
 };
 
 export default userActionTypes;
