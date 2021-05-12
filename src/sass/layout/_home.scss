@@ -13,8 +13,7 @@
 
       &--backdrop {
          @include size($h: -webkit-fill-available, $w: 100vw);
-         @include size($h: stretch);
-         @include pos-fixed($t: 0, $l: 0);
+         @include pos-fixed($t: 0, $l: 0, $z: 100);
       }
 
       &--photo {
