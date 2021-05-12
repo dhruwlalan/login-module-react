@@ -49,3 +49,8 @@ export const updateEmail = ({ email, password }) => ({
    type: userActionTypes.UPDATE_EMAIL,
    payload: { email, password },
 });
+
+export const confirmPasswordReset = ({ actionCode, newPassword }) => ({
+   type: userActionTypes.CONFIRM_PASSWORD_RESET,
+   payload: { actionCode, newPassword },
+});

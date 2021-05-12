@@ -12,6 +12,7 @@ const userActionTypes = {
 
    UPDATE_PASSWORD: 'UPDATE_PASSWORD',
    UPDATE_EMAIL: 'UPDATE_EMAIL',
+   CONFIRM_PASSWORD_RESET: 'CONFIRM_PASSWORD_RESET,',
 };
 
 export default userActionTypes;

@@ -169,6 +169,20 @@ export function* onUpdateEmail() {
    yield takeLatest(userActionTypes.UPDATE_EMAIL, updateEmail);
 }
 
+function* confirmPasswordReset({ payload: { actionCode, newPassword } }) {
+   try {
+      yield auth.confirmPasswordReset(actionCode, newPassword);
+      yield put(setStatus('success', 'Password Reseted Successfully!'));
+      yield put(setStatus(null));
+   } catch (error) {
+      yield put(setStatus('error', 'something went wrong!'));
+      yield put(setStatus(null));
+   }
+}
+export function* onConfirmPasswordReset() {
+   yield takeLatest(userActionTypes.CONFIRM_PASSWORD_RESET, confirmPasswordReset);
+}
+
 export default function* userSagas() {
    yield all([
       call(onCheckUserLoggedIn),
@@ -178,5 +192,6 @@ export default function* userSagas() {
       call(onForgetPassword),
       call(onUpdatePassword),
       call(onUpdateEmail),
+      call(onConfirmPasswordReset),
    ]);
 }
