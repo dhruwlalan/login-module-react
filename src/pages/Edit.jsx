@@ -9,18 +9,19 @@ import FgiEmail from '../components/layout/FgiEmail';
 import FgiPass from '../components/layout/FgiPass';
 import SubmitBtn from '../components/layout/SubmitBtn';
 import { alert } from '../redux/alert/alertActions';
-import { updatePassword } from '../redux/user/userActions';
+import { updatePassword, updateEmail } from '../redux/user/userActions';
 import { selectCurrentUser, selectUserStatus } from '../redux/user/userSelector';
 
-const Edit = ({ user, alert, updatePassword, userStatus }) => {
+const Edit = ({ user, alert, updatePassword, userStatus, updateEmail }) => {
    const [fullname, setFullname] = useState(user.displayName);
    const [fullnameStatus, setFullnameStatus] = useState('notEntered');
    const [photoURL, setPhotoURL] = useState(user.photoURL);
+
    const [email, setEmail] = useState(user.email);
    const [emailStatus, setEmailStatus] = useState('notEntered');
-
    const [password, setPassword] = useState('');
    const [passwordStatus, setPasswordStatus] = useState('notEntered');
+
    const [currentPassword, setCurrentPassword] = useState('');
    const [currentPasswordStatus, setCurrentPasswordStatus] = useState('notEntered');
    const [newPassword, setNewPassword] = useState('');
@@ -45,6 +46,9 @@ const Edit = ({ user, alert, updatePassword, userStatus }) => {
 
       setTimeout(() => {
          Btns[submittedBtn]('notSubmitted');
+         setPassword('');
+         setCurrentPassword('');
+         setNewPassword('');
       }, 1000);
    }, [userStatus, alert, submittedBtn]);
 
@@ -62,6 +66,23 @@ const Edit = ({ user, alert, updatePassword, userStatus }) => {
          setUpdatePasswordBtnStatus('submitted');
          setSubmittedBtn('password');
          updatePassword(currentPassword, newPassword);
+      }
+   };
+
+   const handleEmailUpdate = (e) => {
+      e.preventDefault();
+      if (emailStatus === 'notEntered') {
+         alert('error', 'Please enter your email address.');
+      } else if (emailStatus === 'EnteredButInvalid') {
+         alert('error', 'Please enter a valid email address.');
+      } else if (passwordStatus === 'notEntered') {
+         alert('error', 'Please enter your password to change your email');
+      } else if (passwordStatus === 'EnteredButInvalid') {
+         alert('error', 'Please enter your correct current password');
+      } else {
+         setUpdateEmailBtnStatus('submitted');
+         setSubmittedBtn('email');
+         updateEmail(email, password);
       }
    };
 
@@ -117,7 +138,11 @@ const Edit = ({ user, alert, updatePassword, userStatus }) => {
          </div>
          <Pipes />
          <div className="section section--edit">
-            <form className="form form--edit" autoComplete="off">
+            <form
+               className="form form--edit"
+               autoComplete="off"
+               onSubmit={handleEmailUpdate}
+            >
                <h3 className="form__header--midtitle">Update Your Email</h3>
                <div className="form__body">
                   <FgiEmail
@@ -175,5 +200,6 @@ const mapDispatchToProps = (dispatch) => ({
    alert: (type, msg) => dispatch(alert(type, msg)),
    updatePassword: (currentPassword, newPassword) =>
       dispatch(updatePassword({ currentPassword, newPassword })),
+   updateEmail: (email, password) => dispatch(updateEmail({ email, password })),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Edit);

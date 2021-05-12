@@ -44,3 +44,8 @@ export const updatePassword = ({ currentPassword, newPassword }) => ({
    type: userActionTypes.UPDATE_PASSWORD,
    payload: { currentPassword, newPassword },
 });
+
+export const updateEmail = ({ email, password }) => ({
+   type: userActionTypes.UPDATE_EMAIL,
+   payload: { email, password },
+});

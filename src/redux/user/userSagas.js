@@ -5,7 +5,7 @@ import userActionTypes from './userActionTypes';
 import { storeUser, setStatus } from './userActions';
 import { fb, auth, resolveUser, getCurrentUser } from '../../firebase/firebaseUtils';
 
-export function* isUserLoggedIn() {
+function* isUserLoggedIn() {
    try {
       const user = yield resolveUser();
       if (!user) {
@@ -21,7 +21,7 @@ export function* onCheckUserLoggedIn() {
    yield takeLatest(userActionTypes.CHECK_USER_LOGGED_IN, isUserLoggedIn);
 }
 
-export function* signup({ payload: { email, password, fullName } }) {
+function* signup({ payload: { email, password, fullName } }) {
    try {
       const { user } = yield auth.createUserWithEmailAndPassword(email, password);
       yield user.updateProfile({
@@ -51,7 +51,7 @@ export function* onSignup() {
    yield takeLatest(userActionTypes.SIGN_UP, signup);
 }
 
-export function* signin({ payload: { email, password } }) {
+function* signin({ payload: { email, password } }) {
    try {
       yield auth.signInWithEmailAndPassword(email, password);
       const currentUser = getCurrentUser();
@@ -76,7 +76,7 @@ export function* onSignin() {
    yield takeLatest(userActionTypes.SIGN_IN, signin);
 }
 
-export function* signout() {
+function* signout() {
    try {
       yield auth.signOut();
       yield put(storeUser(null));
@@ -89,7 +89,7 @@ export function* onSignout() {
    yield takeLatest(userActionTypes.SIGN_OUT, signout);
 }
 
-export function* forgetPassword({ payload: { email } }) {
+function* forgetPassword({ payload: { email } }) {
    try {
       yield auth.sendPasswordResetEmail(email);
       yield put(setStatus('success', 'Link sent to email successfully!'));
@@ -112,8 +112,7 @@ function* _reAuthenticateUser(password) {
       return error.code;
    }
 }
-
-export function* updatePassword({ payload: { currentPassword, newPassword } }) {
+function* updatePassword({ payload: { currentPassword, newPassword } }) {
    const res = yield _reAuthenticateUser(currentPassword);
    if (res === 'success') {
       try {
@@ -141,6 +140,34 @@ export function* updatePassword({ payload: { currentPassword, newPassword } }) {
 export function* onUpdatePassword() {
    yield takeLatest(userActionTypes.UPDATE_PASSWORD, updatePassword);
 }
+function* updateEmail({ payload: { email, password } }) {
+   const res = yield _reAuthenticateUser(password);
+   if (res === 'success') {
+      try {
+         const user = getCurrentUser();
+         yield user.updateEmail(email);
+         yield put(storeUser(getCurrentUser()));
+         yield put(setStatus('success', 'Email Updated Successfully!'));
+         yield put(setStatus(null));
+      } catch (error) {
+         yield put(setStatus('error', error.message));
+      }
+   } else {
+      if (res === 'auth/wrong-password') {
+         yield put(setStatus('error', 'Invalid Current Password!'));
+         yield put(setStatus(null));
+      } else if (res === 'auth/too-many-requests') {
+         yield put(setStatus('error', 'Please try after some time!'));
+         yield put(setStatus(null));
+      } else {
+         yield put(setStatus('error', 'something went wrong!'));
+         yield put(setStatus(null));
+      }
+   }
+}
+export function* onUpdateEmail() {
+   yield takeLatest(userActionTypes.UPDATE_EMAIL, updateEmail);
+}
 
 export default function* userSagas() {
    yield all([
@@ -150,5 +177,6 @@ export default function* userSagas() {
       call(onSignout),
       call(onForgetPassword),
       call(onUpdatePassword),
+      call(onUpdateEmail),
    ]);
 }
