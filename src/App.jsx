@@ -8,12 +8,12 @@ import ProtectedRoute from './components/utils/ProtectedRoute';
 import PublicRoute from './components/utils/PublicRoute';
 import { checkUserLoggedIn } from './redux/user/userActions';
 
-const Home = lazy(() => import('./pages/Home'));
-const Edit = lazy(() => import('./pages/Edit'));
-const LoginSignup = lazy(() => import('./pages/LoginSignup'));
-const ForgetPassword = lazy(() => import('./pages/ForgetPassword'));
-const AccountManagement = lazy(() => import('./pages/AccountManagement'));
-const PageNotFound = lazy(() => import('./pages/PageNotFound'));
+import Home from './pages/Home';
+import Edit from './pages/Edit';
+import LoginSignup from './pages/LoginSignup';
+import ForgetPassword from './pages/ForgetPassword';
+import AccountManagement from './pages/AccountManagement';
+import PageNotFound from './pages/PageNotFound';
 
 function App({ checkUserLoggedIn }) {
    useEffect(() => {
